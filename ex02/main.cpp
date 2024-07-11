@@ -33,13 +33,6 @@ int main(int argc, char* argv[]) {
 		sorter.setVectorAndList(argc,argv);
 		sorter.run();
 
-//		sorter.createJacobsthalList(lst, 24);//
-//		sorter.createJacobsthalVector(vec, 24);//
-//		std::cout << "vec";//
-//		printVector(vec);//
-//		std::cout << "lst";//
-//		printList(lst);//
-		
 
 
 	} catch (const std::exception& e) {

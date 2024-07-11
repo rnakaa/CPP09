@@ -102,7 +102,11 @@ void PmergeMe::createJacobsthalList(std::list<unsigned int>& lst, const size_t m
 
 
 void PmergeMe::run(){
-		runMergeInsertionSort(_vec);
+		std::vector<p_vec> result = runMergeInsertionSort(_vec);
+		for (size_t i = 0; i < result.size()-1; i++){
+			std::cout << result[i].num << " ";
+		}
+		std::cout << result[result.size() - 1].num << " " << std::endl;
 }
 
 
@@ -119,8 +123,6 @@ void PmergeMe::run(){
 
 
 
-// vectorからPairを作成し、vector_chainを更新
-// 大きい数字の下に小さい数字を入れ、vector_chainから小さい数字を削除する
 std::vector<p_vec> PmergeMe::makePair(std::vector<p_vec>& vec){
 		for ( size_t i = 1; i < vec.size(); i++){
 			if (vec[i-1].num>=vec[i].num){
@@ -146,13 +148,90 @@ void PmergeMe::vecFairing(std::vector<p_vec>& vec){
 		}
 }
 
+std::vector<int>  PmergeMe::createJacobsthalSequence(int n) {
+		n = n*2;
+    if (n == 0) return std::vector<int>();
+    if (n == 1) {
+        std::vector<int> result;
+        result.push_back(1);
+        return result;
+    }
 
+    std::vector<int> jacobsthal;
+    jacobsthal.push_back(1);
+    jacobsthal.push_back(3);
+    int next = 3;
+
+    while (jacobsthal.size() < static_cast<size_t>(n)) {
+        next = jacobsthal[jacobsthal.size() - 1] + 2 * jacobsthal[jacobsthal.size() - 2];
+        if (next > n) break;
+        jacobsthal.push_back(next);
+    }
+
+    std::vector<int> result;
+    result.push_back(1);
+
+    for (size_t i = 1; i < jacobsthal.size(); ++i) {
+        for (int j = jacobsthal[i]; j > jacobsthal[i-1]; --j) {
+            if (j <= n) result.push_back(j);
+        }
+    }
+
+		n = n/2;
+		for (size_t i = 0; i < result.size();++i){
+			if ( result[i] > n){
+				result.erase(result.begin() + i);
+				i--;
+			}
+		}
+
+    return result;
+}
+
+size_t binarySearchInsertPosition(const std::vector<p_vec>& vec, const p_vec& value, size_t end) {
+    size_t left = 0;
+    size_t right = end;
+
+    while (left < right) {
+        size_t mid = left + (right - left) / 2;
+        if (vec[mid].num < value.num) {
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+
+    return left;
+}
+
+
+void PmergeMe::insertSorted(std::vector<p_vec>& vec, p_vec& value, size_t end) {
+		std::cout << "insert number in fun" << value.num << std::endl;
+    try {
+        if (end > vec.size()) {
+            end = vec.size();
+        }
+        size_t pos = binarySearchInsertPosition(vec, value, end);
+        vec.insert(vec.begin() + pos, value);
+    } catch (const std::exception& e) {
+        std::cerr << "Error in insertSorted: " << e.what() << std::endl;
+    }
+}
+
+void PmergeMe::printVec(std::vector<p_vec> & vec){
+		if (vec.size() == 0){
+			return;
+		}
+		for (size_t i = 0; i < vec.size() - 1; i++){
+			std::cout << vec[i].num << " ";
+		}
+		std::cout << vec[vec.size()-1].num << std::endl;
+}
 
 std::vector<p_vec> PmergeMe::runMergeInsertionSort(std::vector<p_vec>& vec){
 		if ( vec.size() < 2){
 			return vec;
 		}
-		std::cout << "~~~ようこそkaisou = " << _kaisou<< " へ~~~"<< std::endl;
 		_kaisou++;
 		p_vec amachan;
 		amachan.num = -1;
@@ -161,57 +240,144 @@ std::vector<p_vec> PmergeMe::runMergeInsertionSort(std::vector<p_vec>& vec){
 
 
 
-		std::cout << "vector 表示します makePair前" << std::endl;
-		for (size_t i = 0; i < vec.size(); i++){
-			std::cout << vec[i].num << std::endl;
-		}
-
-//  以下では、main_vectorをペアに分けて、一つのvectorにする
+		//std::cout << "vector 表示します makePair前" << std::endl;
+		//for (size_t i = 0; i < vec.size(); i++){
+		//	std::cout << vec[i].num << " ";
+		//}
+//		std::cout << std::endl;
+		vecFairing(vec);
 		makePair(vec);
 
-		std::cout << "vector 表示します" << std::endl;
-		for (size_t i = 0; i < vec.size(); i++){
-			std::cout << vec[i].num << std::endl;
-		}
+		//std::cout << "vector 表示します" << std::endl;
+		//for (size_t i = 0; i < vec.size(); i++){
+		//	std::cout << vec[i].num  << " ";
+		//}
+		//std::cout << std::endl;
+		//std::cout << std::endl;
+		//for (size_t i = 0; i < vec.size() ; i++){
+		//	std::cout << std::endl << vec[i].num << std::endl;
+
+		//	if (vec[i].p_vecs.size())
+		//		printVec(vec[i].p_vecs);	
+		//	for (size_t j = 0; j < vec[i].p_vecs.size() ; j++){
+		//		std::cout << std::endl << vec[i].p_vecs[j].num << std::endl;
+		//		if (vec[i].p_vecs[j].p_vecs.size())
+		//			printVec(vec[i].p_vecs[j].p_vecs);	
+		//	}
+		//	std::cout <<"-------------" << std::endl;
+		//}
 
 
 		runMergeInsertionSort(vec);
 
-//帰還編
-		std::cout << "ようこそ、Welcome!" << std::endl;
-
-// もしmain_chainメンツに子供がいなかったら、(_kaisou == 0で実装できそうだが...)return vec;
-//
-//
-//
+//�編
+		std::cout << std::endl;
+		std::cout << std::endl;
+		std::cout << BLUE << "ようこそ、Welcome!"  << RESET<< std::endl;
+		printVec(vec);
 
 
 
+		for (size_t i = 0; i < vec.size() ; i++){
+			std::cout << std::endl << vec[i].num << std::endl;
 
-
-
-
-		std::vector<p_vec> lay2;
-	for (size_t i = 0; i < vec.size() ;i++){
-		lay2.push_back(vec[i].p_vecs.back());
-		vec[i].p_vecs.pop_back();
-	}
-//	if(_amari[_kaisou].num != -1){
-//		lay2.push_back(_amari[_kaisou]);
-//	}
-		std::cout << "vector 表示します " << std::endl;
-		for (size_t i = 0; i < vec.size(); i++){
-			std::cout << vec[i].num << std::endl;
+			if (vec[i].p_vecs.size())
+				printVec(vec[i].p_vecs);	
+			for (size_t j = 0; j < vec[i].p_vecs.size() ; j++){
+				std::cout << std::endl << vec[i].p_vecs[j].num << std::endl;
+				if (vec[i].p_vecs[j].p_vecs.size())
+					printVec(vec[i].p_vecs[j].p_vecs);	
+			}
+			std::cout <<"-------------" << std::endl;
 		}
 
 
-		std::cout << "vector 表示します lay2" << std::endl;
-		for (size_t i = 0; i < lay2.size(); i++){
-			std::cout << lay2[i].num << std::endl;
+
+
+
+
+		std::vector<int> jacoblay = createJacobsthalSequence(static_cast<int>(vec.size()));
+
+		size_t pairsize = vec[0].p_vecs.size();
+		std::vector<int> stock;
+
+		if (vec[0].p_vecs.size() >= 1){
+			vec.insert(vec.begin(),vec[0].p_vecs.back());
+			vec[1].p_vecs.pop_back();
+					std::cout << "jacoblay size = " << jacoblay.size() << std::endl;
+			for (size_t i = 1; i < jacoblay.size(); i++){
+				//std::cout  << std::endl << "i = " << i << std::endl;
+				printVec(vec);
+				int pos = jacoblay[i] - 1;
+				int count = 0;
+				//				std::cout << "pos " << jacoblay[i] - 1 << std::endl;
+				for (size_t j = 0; j < vec.size(); j++){
+					//std::cout << "if (pairsize == vec[" << j << "].p_vecs.size())" << std::endl;
+					//	std::cout << "vec[j] " << vec[j].num << std::endl;
+					//	std::cout << "vec[j].size() " << vec[j].p_vecs.size() << std::endl;
+					if (pairsize == vec[j].p_vecs.size())
+						count++;
+					//	std::cout << "count " << count << std::endl;
+					if (count == pos && vec[j].p_vecs.size() != 0){
+								std::cout << "jacoblay[i] " << jacoblay[i] << std::endl;
+								std::cout << "j " << j << std::endl;
+								std::cout << "vec[j] "<< vec[j].num << std::endl;
+								std::cout << "insert number "<< (vec[j].p_vecs).back().num << std::endl<<std::endl;
+
+
+						//		std::cout << "vec[" << j << "].p_vecs" << std::endl;
+						//		printVec(vec[j].p_vecs);
+						insertSorted(vec, (vec[j].p_vecs).back(), j );
+						std::cout << "inserted" << std::endl;
+						printVec(vec);
+						//		std::cout << "koko4" << std::endl;
+						//printVec(vec);
+						//vec[j].p_vecs.pop_back();
+						break;
+					}
+				}
+			}
+			for ( size_t i = 0; i < vec.size(); i++){
+				if (vec[i].p_vecs.size() == pairsize){
+					vec[i].p_vecs.pop_back();
+				}
+			}
+			//		std::cout << "sortdone"<< std::endl;
 		}
+
+
+
+
+
+		if(_amari[_kaisou-1].num != -1){
+			insertSorted(vec, _amari[_kaisou-1], vec.size());
+		}
+
+//		printVec(vec);
+
+
+//		for (size_t i = 0; i < vec.size() ; i++){
+//			std::cout << std::endl << vec[i].num << std::endl;
+//			if (vec[i].p_vecs.size())
+//				printVec(vec[i].p_vecs);	
+//		}
+//
+		for (size_t i = 0; i < vec.size() ; i++){
+			std::cout << std::endl << vec[i].num << std::endl;
+
+			if (vec[i].p_vecs.size())
+				printVec(vec[i].p_vecs);	
+			for (size_t j = 0; j < vec[i].p_vecs.size() ; j++){
+				std::cout << std::endl << vec[i].p_vecs[j].num << std::endl;
+				if (vec[i].p_vecs[j].p_vecs.size())
+					printVec(vec[i].p_vecs[j].p_vecs);	
+			}
+			std::cout <<"-------------" << std::endl;
+		}
+
+
 
 
 		_kaisou--;
 		return vec;
-		
 }
