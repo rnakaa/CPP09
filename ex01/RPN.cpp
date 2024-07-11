@@ -56,7 +56,7 @@ void RPN::calculate(){
 			_stack.push(arg);
 		}
 	}
-	if (_stack.size() != 0)
+	if (_stack.size() != 1)
 		throw std::logic_error("Error");
 		
 	std::cout << _stack.top()<< std::endl;

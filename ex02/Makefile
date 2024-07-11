@@ -1,7 +1,7 @@
 CXX = c++
 
 CXXFLAGS = -std=c++98 -Wall -Wextra -Werror 
-NAME = RPN
+NAME = PmergeMe
 
 SRCS = main.cpp\
 	PmergeMe.cpp
