@@ -191,6 +191,7 @@ std::vector<int>  PmergeMe::createJacobsthalSequence(int n) {
 size_t binarySearchInsertPosition(const std::vector<p_vec>& vec, const p_vec& value, size_t end) {
     size_t left = 0;
     size_t right = end;
+		std::cout << "binary Search " << value.num << std::endl;
 
     while (left < right) {
         size_t mid = left + (right - left) / 2;
@@ -205,14 +206,15 @@ size_t binarySearchInsertPosition(const std::vector<p_vec>& vec, const p_vec& va
 }
 
 
-void PmergeMe::insertSorted(std::vector<p_vec>& vec, p_vec& value, size_t end) {
-		std::cout << "insert number in fun" << value.num << std::endl;
+void PmergeMe::insertSorted(std::vector<p_vec>& vec, p_vec value, size_t end) {
     try {
         if (end > vec.size()) {
             end = vec.size();
         }
         size_t pos = binarySearchInsertPosition(vec, value, end);
+				std::cout << "insert number in fun" << value.num << std::endl;
         vec.insert(vec.begin() + pos, value);
+				printVec(vec);
     } catch (const std::exception& e) {
         std::cerr << "Error in insertSorted: " << e.what() << std::endl;
     }
@@ -302,9 +304,8 @@ std::vector<p_vec> PmergeMe::runMergeInsertionSort(std::vector<p_vec>& vec){
 		std::vector<int> stock;
 
 		if (vec[0].p_vecs.size() >= 1){
-			vec.insert(vec.begin(),vec[0].p_vecs.back());
-			vec[1].p_vecs.pop_back();
-					std::cout << "jacoblay size = " << jacoblay.size() << std::endl;
+			vec.insert(vec.begin(),vec[0].p_vecs.back()); vec[1].p_vecs.pop_back();
+			std::cout << "jacoblay size = " << jacoblay.size() << std::endl;
 			for (size_t i = 1; i < jacoblay.size(); i++){
 				//std::cout  << std::endl << "i = " << i << std::endl;
 				printVec(vec);
@@ -319,15 +320,28 @@ std::vector<p_vec> PmergeMe::runMergeInsertionSort(std::vector<p_vec>& vec){
 						count++;
 					//	std::cout << "count " << count << std::endl;
 					if (count == pos && vec[j].p_vecs.size() != 0){
-								std::cout << "jacoblay[i] " << jacoblay[i] << std::endl;
-								std::cout << "j " << j << std::endl;
-								std::cout << "vec[j] "<< vec[j].num << std::endl;
-								std::cout << "insert number "<< (vec[j].p_vecs).back().num << std::endl<<std::endl;
+						std::cout << "jacoblay[i] " << jacoblay[i] << std::endl;
+						std::cout << "j " << j << std::endl;
+						std::cout << "vec[j] "<< vec[j].num << std::endl;
+						std::cout << "insert number "<< (vec[j].p_vecs).back().num << std::endl<<std::endl;
 
 
 						//		std::cout << "vec[" << j << "].p_vecs" << std::endl;
 						//		printVec(vec[j].p_vecs);
 						insertSorted(vec, (vec[j].p_vecs).back(), j );
+
+						for (size_t i = 0; i < vec.size() ; i++){
+							std::cout << std::endl << vec[i].num << std::endl;
+
+							if (vec[i].p_vecs.size())
+								printVec(vec[i].p_vecs);	
+							for (size_t j = 0; j < vec[i].p_vecs.size() ; j++){
+								std::cout << std::endl << vec[i].p_vecs[j].num << std::endl;
+								if (vec[i].p_vecs[j].p_vecs.size())
+									printVec(vec[i].p_vecs[j].p_vecs);	
+							}
+							std::cout <<"-------------" << std::endl;
+						}
 						std::cout << "inserted" << std::endl;
 						printVec(vec);
 						//		std::cout << "koko4" << std::endl;

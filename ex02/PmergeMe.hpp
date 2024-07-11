@@ -51,7 +51,7 @@ public:
 		std::vector<p_vec> makePair(std::vector<p_vec>& vec);
 		void vecFairing(std::vector<p_vec>& vec);
 		void run();
-		void insertSorted(std::vector<p_vec>& vec, p_vec& target, size_t t);
+		void insertSorted(std::vector<p_vec>& vec, p_vec target, size_t t);
 
 		std::vector<int>  createJacobsthalSequence(int n);
 		void printVec(std::vector<p_vec> & vec);
