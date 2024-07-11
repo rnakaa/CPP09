@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
 		sorter.checkArgs(argc,argv);
 		sorter.setVectorAndList(argc,argv);
 		sorter.run();
+		sorter.runList();
 
 
 

@@ -250,7 +250,7 @@ std::vector<p_vec> PmergeMe::runMergeInsertionSort(std::vector<p_vec>& vec){
 		}
 	}
 
-	if(_amari[_kaisou -1].num != -1){
+	if(_amari[_kaisou-1].num != -1){
 		insertSorted(vec, _amari[_kaisou-1], vec.size());
 	}
 
@@ -268,24 +268,23 @@ void PmergeMe::runList(){
 }
 
 std::list<p_lst> PmergeMe::makePairList(std::list<p_lst>& lst){
-	if (lst.size() < 2) return lst;
-
-	for (size_t i = 1; i < lst.size(); i++){
-		std::list<p_lst>::iterator current_it = lst.begin();
-		std::advance(current_it, i);
-		std::list<p_lst>::iterator prev_it = lst.begin();
-		std::advance(prev_it, i - 1);
-
-		if (prev_it->num >= current_it->num){
-			prev_it->p_lsts.push_back(*current_it);
-			current_it = lst.erase(current_it);
+	std::cout << "2" << std::endl;
+	printList(lst);
+	std::cout << "prev i" << std::endl;
+	for (std::list<p_lst>::iterator it = std::next(lst.begin()); it != lst.end(); ++it){
+		std::list<p_lst>::iterator prev_it = std::prev(it);
+		std::cout << prev_it->num << " " << it->num << std::endl;
+		
+		if (prev_it->num >= it->num){
+			prev_it->p_lsts.push_back(*it);
+			it = lst.erase(it);
 		}
-		else if (prev_it->num < current_it->num){
-			current_it->p_lsts.push_back(*prev_it);
-			lst.erase(prev_it);
+		else if (prev_it->num < it->num){
+			it->p_lsts.push_back(*prev_it);
+			it = lst.erase(prev_it);
 		}
 	}
-
+	std::cout << "prev i done" << std::endl;
 	return lst;
 }
 
@@ -361,59 +360,45 @@ std::list<p_lst> PmergeMe::runMergeInsertionSortList(std::list<p_lst>& lst){
 	_amari_list.push_back(amachan);
 
 	listFairing(lst);
-//	printList(lst);
+	std::cout << "1" << std::endl;
 	makePairList(lst);
+	printList(lst);
+	std::cout << "3" << std::endl;
 
 	runMergeInsertionSortList(lst);
 
-	std::vector<int> jacoblay = createJacobsthalSequence(static_cast<int>(lst.size()));
+	std::list<int> jacoblay = createJacobsthalSequenceList(static_cast<int>(lst.size()));
 
 	size_t pairsize = lst.front().p_lsts.size();
 
 	if (pairsize >= 1){
 		lst.push_front(lst.front().p_lsts.back());
-		(std::next(lst.begin(), 1))->p_lsts.pop_back();
-		for (size_t i = 1; i < jacoblay.size(); i++) {
-			int pos = jacoblay[i] - 1;
+		lst.front().p_lsts.pop_back();
+		for (std::list<int>::iterator it = std::next(jacoblay.begin()); it != jacoblay.end(); ++it) {
+			int pos = *it - 1;
 			int count = 0;
-			for (size_t j = 0; j < lst.size(); j++){
-				std::list<p_lst>::iterator lit = lst.begin();
-				std::advance(lit, j);
-
+			for (std::list<p_lst>::iterator lit = lst.begin(); lit != lst.end(); ++lit){
 				if (pairsize == lit->p_lsts.size())
 					count++;
 				if (count == pos && lit->p_lsts.size() != 0){
-					insertSortedList(lst, lit->p_lsts.back(), j);
+					insertSortedList(lst, lit->p_lsts.back(), std::distance(lst.begin(), lit));
 					break;
 				}
 			}
 		}
-		for (size_t j = 0; j < lst.size(); j++){
-		std::list<p_lst>::iterator lit = lst.begin();
-		std::advance(lit, j);
-
-		if (lit->p_lsts.size() == pairsize){
-			lit->p_lsts.pop_back();
+		for (std::list<p_lst>::iterator lit = lst.begin(); lit != lst.end(); ++lit){
+			if (lit->p_lsts.size() == pairsize){
+				lit->p_lsts.pop_back();
+			}
 		}
 	}
+
+	if (_amari_list.back().num != -1){
+		insertSortedList(lst, _amari_list.back(), lst.size());
 	}
 
-
-//	printList(lst);
-//	std::cout << "_amari[_kaisou-1] " << std::next(_amari_list.begin(), _kaisou -1)->num << std::endl;
-//	std::cout << "print _amarilist" << std::endl;
-//	printList(_amari_list);
-	if (_amari_list.size() > static_cast<size_t> (_kaisou - 1)){
-		if (std::next(_amari_list.begin(), _kaisou -1)->num != -1){
-			insertSortedList(lst, *std::next(_amari_list.begin(), _kaisou-1), lst.size());
-		}
-	}
-//	std::cout << "amari dainyuugo" << std::endl;
-//	printList(lst);
-
-
-_kaisou--;
-return lst;
+	_kaisou--;
+	return lst;
 }
 
 void PmergeMe::printList(std::list<p_lst>& lst){
