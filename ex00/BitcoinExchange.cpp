@@ -103,7 +103,7 @@ void BitcoinExchange::addCSVToMap(){
 void BitcoinExchange::addInputToDeque(const char *file){
 	std::ifstream ifile(file);
 	std::string line;
-
+	std::getline(ifile, line);
 	while (std::getline(ifile, line)) {
 		line.erase(std::remove(line.begin(), line.end(), ' '), line.end());
 		line.erase(std::remove(line.begin(), line.end(), '\t'), line.end());
