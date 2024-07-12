@@ -10,6 +10,7 @@
 #include <limits>
 #include <ctime>
 #include <algorithm>
+#include <sys/time.h>
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"

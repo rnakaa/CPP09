@@ -99,14 +99,28 @@ void PmergeMe::createJacobsthalList(std::list<unsigned int>& lst, const size_t m
 }
 
 
+long long timeDiff(struct timeval start, struct timeval end) {
+    return (end.tv_sec - start.tv_sec) * 1000000LL + (end.tv_usec - start.tv_usec);
+}
+
+
+
 
 
 void PmergeMe::run(){
+	struct timeval start, end;
+	std::cout << "Before: " ;
+	printVec(_vec);
+	gettimeofday(&start, NULL);
 	std::vector<p_vec> result = runMergeInsertionSort(_vec);
+	gettimeofday(&end, NULL);
+	std::cout << "After: " ;
 	for (size_t i = 0; i < result.size()-1; i++){
 		std::cout << result[i].num << " ";
 	}
 	std::cout << result[result.size() - 1].num << " " << std::endl;
+	long long duration = timeDiff(start, end);
+	std::cout << "Time to process a range of " << result.size() << " elements witch std::list : "<< duration << "us" << std::endl;
 }
 
 std::vector<p_vec> PmergeMe::makePair(std::vector<p_vec>& vec){
@@ -260,10 +274,16 @@ std::vector<p_vec> PmergeMe::runMergeInsertionSort(std::vector<p_vec>& vec){
 }
 
 void PmergeMe::runList(){
+	struct timeval start, end;
+	gettimeofday(&start, NULL);
 	std::list<p_lst> result = runMergeInsertionSortList(_lst);
-	for (std::list<p_lst>::iterator it = result.begin(); it != result.end(); ++it) {
-		std::cout << it->num << " ";
-	}
+	gettimeofday(&end, NULL);
+//	for (std::list<p_lst>::iterator it = result.begin(); it != result.end(); ++it) {
+//		std::cout << it->num << " ";
+//	}
+//	std::cout << std::endl;
+	long long duration = timeDiff(start, end);
+	std::cout << "Time to process a range of " << result.size() << " elements witch std::list : "<< duration << "us" << std::endl;
 	std::cout << std::endl;
 }
 
